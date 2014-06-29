@@ -19,6 +19,6 @@
     "smarttabs": true,
     "white": true,
 
-    "predef": ["damnnewwebappApp", "angular", "atmosphere"]
+    "predef": ["jiraKanbanCards", "angular"]
 
 }

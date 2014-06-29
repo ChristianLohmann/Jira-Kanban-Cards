@@ -9,7 +9,7 @@ $actionName = isset($_GET["a"]) ? $_GET["a"] : "index";
 /**
  * do we have this controller? get and create object
  */
-$appPath = dirname(__FILE__)."/app";
+$appPath = dirname(__FILE__)."/php";
 $controllerPath = $appPath."/Controller/".ucfirst($controllerName)."Controller.php";
 $controllerClass = ucfirst($controllerName)."Controller";
 if(!file_exists($controllerPath)) die("Controller ".ucfirst($controllerName)." not found.");

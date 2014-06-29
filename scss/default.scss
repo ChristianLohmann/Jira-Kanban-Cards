@@ -1,0 +1,187 @@
+
+$epic-group-0-color: #FF0000 !default;
+$epic-group-1-color: #FF7400 !default;
+$epic-group-2-color: #009999 !default;
+$epic-group-3-color: #00CC00 !default;
+$epic-group-4-color: #CD0074 !default;
+$epic-group-5-color: #9FEE00 !default;
+$epic-group-6-color: #FFE900 !default;
+$epic-group-7-color: #B90091 !default;
+$epic-group-8-color: #540EAD !default;
+
+$light-gray: #999 !default;
+$darker-gray: #666 !default;
+$white: #fff !default;
+/**
+ * General styles for all pages
+ */
+body, div {
+  margin: 0;
+  padding: 0;
+  font-family: sans;
+  font-size: 0.95em;
+}
+
+
+h1 {
+  font-size: 2em;
+  margin: 0 0 1em 0;
+  padding: 0;
+}
+
+/**
+ * Search style for the landing page
+ */
+div.search p {
+  padding-bottom: 1em;
+}
+
+
+div.search {
+  text-align: center;
+  margin-top: 10%;
+  font-family: sans;
+}
+
+div.search div.jirainfo {
+  width: 80%;
+  max-width: 50em;
+  overflow: hidden;
+  margin: auto;
+  text-align: left;
+}
+
+div.search div.jirainfo label {
+  width: 7em;
+  display: block;
+  float: left;
+  margin-top: 1em;
+}
+
+div.search input,
+div.search select {
+  padding: 1em;
+  margin-left: 0;
+}
+
+div.search div.jirainfo input[type=submit] {
+  margin-left: 7em;
+}
+
+div.search input[name="jql"] {
+  width: 70%;
+}
+
+/**
+ * Styles for the printable list
+ */
+div.ticket {
+  border-bottom: 1px solid $light-gray;
+  border-right: 1px solid $light-gray;
+  float: left;
+  width: 47%;
+  padding: 1%;
+  page-break-inside : avoid;
+  overflow: hidden;
+}
+
+div.ticket div.summary {
+  font-weight: bold;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  text-align: center;
+  width: 100%;
+  font-size: 1.3em;
+  height: 3.9em;
+  overflow: hidden;
+  line-height: 1.3em;
+}
+
+div.ticket div.epic {
+  float: right;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 45%;
+  text-overflow: ellipsis;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  padding: 0 0.5em 0 0.5em;
+  color: $white;
+}
+
+div.epic.epicgroup_0 { background-color: $epic-group-0-color }
+div.epic.epicgroup_1 { background-color: $epic-group-1-color }
+div.epic.epicgroup_2 { background-color: $epic-group-2-color }
+div.epic.epicgroup_3 { background-color: $epic-group-3-color }
+div.epic.epicgroup_4 { background-color: $epic-group-4-color }
+div.epic.epicgroup_5 { background-color: $epic-group-5-color }
+div.epic.epicgroup_6 { background-color: $epic-group-6-color }
+div.epic.epicgroup_7 { background-color: $epic-group-7-color }
+div.epic.epicgroup_8 { background-color: $epic-group-8-color }
+
+div.ticket div.reporter {
+  white-space: nowrap;
+}
+
+div.ticket div.reporter:before {
+  content: "From: ";
+  color: $darker-gray;
+}
+
+div.ticket div.assignee {
+  float: left;
+  white-space: nowrap;
+}
+
+div.ticket div.assignee:before {
+  content: "To: ";
+  color: $darker-gray;
+}
+
+div.ticket div.rank {
+  float: right;
+  white-space: nowrap;
+}
+
+div.ticket div.rank:before {
+  content: "Rank: ";
+  color: $darker-gray;
+}
+
+div.ticket div.remaining_time {
+  float: right;
+  white-space: nowrap;
+}
+
+div.ticket div.remaining_time:before {
+  content: "Time: ";
+  color: $darker-gray;
+}
+
+div.priority {
+  width: 16px;
+  height: 16px;
+  background-image: url(../images/priorities/major.png);
+  float: left;
+}
+
+div.priority.blocker { background-image: url(../images/priorities/blocker.png); }
+div.priority.critical { background-image: url(../images/priorities/critical.png); }
+div.priority.minor { background-image: url(../images/priorities/minor.png); }
+div.priority.trivial { background-image: url(../images/priorities/trivial.png); }
+
+div.issuetype {
+  width: 16px;
+  height: 16px;
+  background-image: url(../images/types/task.png);
+  float: left;
+  margin-right: 0.2em;
+}
+
+div.issuetype.bug { background-image: url(../images/types/bug.png); }
+div.issuetype.epic { background-image: url(../images/types/epic.png); }
+div.issuetype.subtask { background-image: url(../images/types/subtask.png); }
+div.issuetype.idea { background-image: url(../images/types/idea.png); }
+div.issuetype.improvement { background-image: url(../images/types/improvement.png); }
+div.issuetype.newfeature { background-image: url(../images/types/newfeature.png); }

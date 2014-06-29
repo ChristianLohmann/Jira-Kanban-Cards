@@ -1,7 +1,7 @@
 {
-  "name": "damnnewwebapp",
+  "name": "jira-kanban-cards",
   "version": "0.0.0",
-  "description": "Description for damnNewWebapp",
+  "description": "Description for jira-kanban-cards",
   "dependencies": {},
   "devDependencies": {
     "grunt": "0.4.4",

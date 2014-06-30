@@ -10,3 +10,4 @@ node_modules
 .merge_file*
 .sass-cache
 .DS_Store
+bower_components

@@ -27,14 +27,14 @@ jiraKanbanCards.provider('Jira', ['cons', '$base64'], function (cons, $base64) {
                 query(cons.GET, "project/" + projectKey + "/versions?");
             },
 
-            updateTicket: function(ticketKey, newData, transition) {
+            updateTicket: function (ticketKey, newData, transition) {
                 var method = cons.PUT;
                 var transitionUrl = "";
-                if(angular.isBoolean(transition) && transition ===true){
+                if (angular.isBoolean(transition) && transition === true) {
                     transitionUrl = '/transitions?expand=transitions.fields';
                     method = cons.POST;
                 }
-                query(method, 'issue/'+ticketKey + transitionUrl, newData);
+                query(method, 'issue/' + ticketKey + transitionUrl, newData);
             }
 
         };
@@ -71,9 +71,9 @@ jiraKanbanCards.provider('Jira', ['cons', '$base64'], function (cons, $base64) {
     };
 
     this.query = function (method, query, data) {
-        var result = this.sendRequest( method, query, data );
-        if( result === false ) {
-            $window.alert("It wasn't possible to get jira url " + this.url + query + 'with username ' +this.username);
+        var result = this.sendRequest(method, query, data);
+        if (result === false) {
+            $window.alert("It wasn't possible to get jira url " + this.url + query + 'with username ' + this.username);
         }
         return result;
     };
@@ -82,14 +82,14 @@ jiraKanbanCards.provider('Jira', ['cons', '$base64'], function (cons, $base64) {
         /**
          * start to build the header
          */
-        var headers = {'Content-Type:' : 'application/json'};
+        var headers = {'Content-Type:': 'application/json'};
 
         /**
          * add authorization
          */
-        if(angular.isString(this.username)) {
+        if (angular.isString(this.username)) {
             var credential = $base64.encode(this.username + ':' + this.password);
-          headers['Authorization'] = 'Basic ' + credential;
+            headers['Authorization'] = 'Basic ' + credential;
         }
 
         return data;

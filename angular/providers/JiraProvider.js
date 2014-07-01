@@ -1,6 +1,6 @@
 'use strict';
 
-jiraKanbanCards.provider('Jira', ['cons', '$base64'], function (cons, $base64) {
+jiraKanbanCards.provider('Jira', ['cons', '$base64', '$window'], function (cons, $base64, $window) {
 
     this.url = '/';
     this.username = '';
@@ -14,54 +14,115 @@ jiraKanbanCards.provider('Jira', ['cons', '$base64'], function (cons, $base64) {
         var self = this;
 
         return {
-            invoke: function () {
-
+            invoke: function (jiraUrl) {
+                url = jiraUrl;
             },
 
-            getIssuesByJql: function (jql, fields) {
-                var path = 'search?fields=' + fields + '&maxResults=100&jql=' + encodeURIComponent(jql).replace(/%252F/g, '/');
-                self.query(cons.GET, path)
+            getIssuesByJql: function (jql, callback, fields) {
+                var path = '';
+                if(fields) {
+                    path = 'search?fields=' + fields + '&maxResults=100&jql=' + encodeURIComponent(jql).replace(/%252F/g, '/');
+                }else {
+                    path = jql;
+                }
+                self.sendRequest(cons.GET, path, callback)
             },
 
-            getVersionsByProject: function (projectKey) {
-                query(cons.GET, "project/" + projectKey + "/versions?");
+            getVersionsByProject: function (projectKey, callback) {
+                self.sendRequest(cons.GET, "project/" + projectKey + "/versions?", callback);
             },
 
             updateTicket: function (ticketKey, newData, transition) {
                 var method = cons.PUT;
-                var transitionUrl = "";
+                var transitionUrl = '';
                 if (angular.isBoolean(transition) && transition === true) {
                     transitionUrl = '/transitions?expand=transitions.fields';
                     method = cons.POST;
                 }
-                query(method, 'issue/' + ticketKey + transitionUrl, newData);
+                self.sendRequest(method, 'issue/' + ticketKey + transitionUrl, callback, newData);
+            },
+
+            /**
+             * set the username and password for the current request
+             * this could change later to a token authentification
+             * @param username
+             * @param password
+             */
+            $auth: function (username, password) {
+                self.username = username;
+                self.password = password;
+            },
+
+            /**
+             * get base information about a ticket
+             * function still contains some warnings - should be fixed
+             * @param ticket
+             * @return ticket
+             */
+            $getBaseInformationForIssue: function (ticket) {
+
+                return ticket;
+            },
+
+
+            query: function (method, query, callback, data) {
+                var result = this.sendRequest(method, query, callback, data);
+                if (result === false) {
+                    $window.alert("It wasn't possible to get jira url " + self.url + query + 'with username ' + self.username);
+                }
+            },
+
+            sendRequest: function (method, query, callback, data) {
+                /**
+                 * start to build the header
+                 */
+                var config = {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                };
+
+                /**
+                 * add authorization
+                 */
+                if (angular.isString(self.username)) {
+                    var credential = $base64.encode(self.username + ':' + self.password);
+                    config.headers['Authorization'] = 'Basic ' + credential;
+                }
+
+                /**
+                 * set Content-Length header
+                 */
+                config.headers['Content-Length'] = data.length;
+
+                if (method === cons.GET) {
+                    config.params = data;
+                    var successCallback = function (data, status, headers, config) {
+                        if (data === '') {
+                            $window.alert('JIRA Rest server returns unexpected result.');
+                        } else {
+                            callback(data);
+                        }
+                    };
+                    $http.get(self.url, config).success(function (data, status, headers, config) {
+                        successCallback(data, status, headers, config);
+                    });
+                } else {
+                    config.data = data;
+                    $http({
+                        method: method,
+                        headers: config.headers,
+                        data: config.data
+                    }).success(function (data, status, headers, config) {
+                        successCallback(data, status, headers, config);
+                    });
+                }
             }
+
 
         };
     };
-
-    /**
-     * set the username and password for the current request
-     * this could change later to a token authentification
-     * @param username
-     * @param password
-     */
-    this.$auth = function (username, password) {
-        this.username = username;
-        this.password = password;
-    };
-
-    /**
-     * get base information about a ticket
-     * function still contains some warnings - should be fixed
-     * @param ticket
-     * @return ticket
-     */
-    this.$getBaseInformationForIssue = function (ticket) {
-
-        return ticket;
-    };
-
+    
     this.setUrl = function (url) {
         this.url = url;
     };
@@ -69,39 +130,4 @@ jiraKanbanCards.provider('Jira', ['cons', '$base64'], function (cons, $base64) {
     this.setUrlArray = function (urlArray) {
         this.urlArray = urlArray;
     };
-
-    this.query = function (method, query, data) {
-        var result = this.sendRequest(method, query, data);
-        if (result === false) {
-            $window.alert("It wasn't possible to get jira url " + this.url + query + 'with username ' + this.username);
-        }
-        return result;
-    };
-
-    this.sendRequest = function (method, query, data) {
-        /**
-         * start to build the header
-         */
-        var headers = {'Content-Type:': 'application/json'};
-
-        /**
-         * add authorization
-         */
-        if (angular.isString(this.username)) {
-            var credential = $base64.encode(this.username + ':' + this.password);
-            headers['Authorization'] = 'Basic ' + credential;
-        }
-
-        return data;
-//        $http.get(this.url)
-//            .success(function (data, status, headers, config) {
-//                $rootScope.login = data;
-//                if (data === '') {
-//                    $rootScope.$broadcast('event:auth-loginRequired');
-//                } else {
-//                    $rootScope.$broadcast('event:auth-authConfirmed');
-//                }
-//            });
-    };
-
 });

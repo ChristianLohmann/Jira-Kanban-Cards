@@ -1,4 +1,4 @@
-package web.rest.resource;
+package de.jirakanbancards.resource;
 
 import java.util.LinkedHashMap;
 

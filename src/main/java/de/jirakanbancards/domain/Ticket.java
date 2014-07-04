@@ -1,4 +1,4 @@
-package domain;
+package de.jirakanbancards.domain;
 
 /**
  * Author: clohmann Date: 03.07.14 Time: 13:11

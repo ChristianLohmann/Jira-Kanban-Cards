@@ -1,45 +1,37 @@
 'use strict';
 
-jiraKanbanCards.provider('Jira', ['cons', '$base64', '$window'], function (cons, $base64, $window) {
+angular.module('jiraKanbanCards')
+    .factory('jira', ['cons', '$base64', '$window', '$http', function (cons, $base64, $window, $http) {
 
-    this.url = '/';
-    this.username = '';
-    this.password = '';
-    this.fields = 'all*';
+        this.url = 'https://techjira.zalando.net/rest/api/';
+        this.username = '';
+        this.password = '';
+        this.fields = 'all*';
 
-    this.$get = function () {
-        var url = this.url;
-        var password = this.password;
-        var username = this.username;
         var self = this;
 
         return {
-            invoke: function (jiraUrl) {
-                url = jiraUrl;
-            },
 
             getIssuesByJql: function (jql, callback, fields) {
-                var path = '';
-                if(fields) {
-                    path = 'search?fields=' + fields + '&maxResults=100&jql=' + encodeURIComponent(jql).replace(/%252F/g, '/');
-                }else {
-                    path = jql;
+                if (!fields) {
+                    fields = '*all';
                 }
-                self.sendRequest(cons.GET, path, callback)
+                var query = 'search?fields=' + fields + '&maxResults=100&jql=' + encodeURIComponent(jql).replace(/%252F/g, '/');
+                this.sendRequest(cons.GET, query, callback, fields);
             },
 
             getVersionsByProject: function (projectKey, callback) {
-                self.sendRequest(cons.GET, "project/" + projectKey + "/versions?", callback);
+                this.sendRequest(cons.GET, 'project/' + projectKey + '/versions?', callback);
             },
 
-            updateTicket: function (ticketKey, newData, transition) {
+            updateTicket: function (ticketKey, newData, transition, callback) {
                 var method = cons.PUT;
                 var transitionUrl = '';
                 if (angular.isBoolean(transition) && transition === true) {
                     transitionUrl = '/transitions?expand=transitions.fields';
                     method = cons.POST;
                 }
-                self.sendRequest(method, 'issue/' + ticketKey + transitionUrl, callback, newData);
+                this.sendRequest(method, 'issue/' + ticketKey + transitionUrl, callback, newData);
             },
 
             /**
@@ -68,7 +60,7 @@ jiraKanbanCards.provider('Jira', ['cons', '$base64', '$window'], function (cons,
             query: function (method, query, callback, data) {
                 var result = this.sendRequest(method, query, callback, data);
                 if (result === false) {
-                    $window.alert("It wasn't possible to get jira url " + self.url + query + 'with username ' + self.username);
+                    $window.alert('It wasn\'t possible to get jira url ' + self.url + query + 'with username ' + self.username);
                 }
             },
 
@@ -78,7 +70,10 @@ jiraKanbanCards.provider('Jira', ['cons', '$base64', '$window'], function (cons,
                  */
                 var config = {
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*',
+                        'Access-Control-Allow-Methods': 'POST, GET, PUT, DELETE, OPTIONS',
+                        'Access-Control-Allow-Headers': 'X-Requested-With, content-type'
                     }
                 };
 
@@ -87,13 +82,15 @@ jiraKanbanCards.provider('Jira', ['cons', '$base64', '$window'], function (cons,
                  */
                 if (angular.isString(self.username)) {
                     var credential = $base64.encode(self.username + ':' + self.password);
-                    config.headers['Authorization'] = 'Basic ' + credential;
+                    config.headers.Authorization = 'Basic ' + credential;
                 }
 
                 /**
                  * set Content-Length header
                  */
                 config.headers['Content-Length'] = data.length;
+
+                $http.defaults.useXDomain = true;
 
                 if (method === cons.GET) {
                     config.params = data;
@@ -104,7 +101,7 @@ jiraKanbanCards.provider('Jira', ['cons', '$base64', '$window'], function (cons,
                             callback(data);
                         }
                     };
-                    $http.get(self.url, config).success(function (data, status, headers, config) {
+                    $http.get(self.url + query, config).success(function (data, status, headers, config) {
                         successCallback(data, status, headers, config);
                     });
                 } else {
@@ -117,17 +114,10 @@ jiraKanbanCards.provider('Jira', ['cons', '$base64', '$window'], function (cons,
                         successCallback(data, status, headers, config);
                     });
                 }
+            },
+
+            setUrl: function (url) {
+                self.url = url;
             }
-
-
         };
-    };
-    
-    this.setUrl = function (url) {
-        this.url = url;
-    };
-
-    this.setUrlArray = function (urlArray) {
-        this.urlArray = urlArray;
-    };
-});
+    }]);

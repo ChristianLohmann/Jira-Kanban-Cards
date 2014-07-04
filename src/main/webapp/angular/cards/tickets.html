@@ -1,0 +1,11 @@
+<div class="ticket" ng-repeat="ticket in tickets">
+    <div class="priority" ng-class="angular.lowercase(ticket.priority)"></div>
+    <div class="issuetype" ng-class="angular.lowercase(ticket.issuetype).replace(/ /g, '')"></div>
+    <div class="epic" ng-if="ticket.epic" ng-class="'epicgroup_' + getEpicNumber(ticket.epic)">{{ticket.epic}}</div>
+    <div class="number">{{ticket.key}}</div>
+    <div class="summary">{{ticket.summary}}</div>
+    <div class="rank" ng-if="ticket.rank">{{ticket.rank}}</div>
+    <div class="reporter">{{ticket.reporter}}</div>
+    <div class="assignee">{{ticket.assignee}}</div>
+    <div class="remaining_time">{{ticket.remaining_time}}</div>
+</div>

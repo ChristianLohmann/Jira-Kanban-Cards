@@ -1,6 +1,7 @@
 {
     "name": "jira-kanban-cards",
     "version": "0.0.0",
+    "appPath": "src/main/webapp",
     "dependencies": {
         "bootstrap-sass": "twbs/bootstrap-sass#~3.1.1",
         "modernizr": "2.7.1",

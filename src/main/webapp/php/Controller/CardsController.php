@@ -23,11 +23,11 @@ class CardsController {
 	 */
 	public function index() {
 	}
-	
+
 	/**
 	 * show the printable ticket list based on jql query
 	 */
-	public function tickets() {	
+	public function tickets() {
 
 		/**
 		 * get and check jql query
@@ -38,7 +38,7 @@ class CardsController {
 		/**
 		 * create jira object and establish connection
 		 */
-		require_once(dirname(__FILE__)."/../Lib/Jira.php");
+		require_once(dirname(__FILE__) . "/../Lib/Jira.php");
 		$jira = new Jira($this->requestVars["post"]["path"]);
 		$jira->auth($this->requestVars["post"]["username"], $this->requestVars["post"]["password"]);
 
@@ -65,7 +65,7 @@ class CardsController {
 			"tickets" => $tickets
 		);
 	}
-	
+
 	/**
 	 * put the issues in a format we can work with,
 	 * so limit to the most used values
@@ -104,14 +104,14 @@ class CardsController {
 			if( property_exists($ticket->fields, $key ) ) {
 				$collectedTicket[$name] = $ticket->fields->$key;
 			}
-		}		 
+		}
 
 		/**
 		 * return total collection
 		 */
 		return $collectedTicket;
 	}
-	
+
 	/**
 	 * add Agile-epic information to a ticket, since a ticket comes with the
 	 * link to the epic, but we need to names, which we need to fetch from Jira seperatly
@@ -131,7 +131,7 @@ class CardsController {
 		$epickeys = array_unique($epickeys);
 		if( count($epickeys) == 0 ) return $tickets;
 
-		
+
 		/**
 		 * get names pro jira and convert into nicer structure
 		 */
@@ -149,5 +149,5 @@ class CardsController {
 			$tickets[$i]["epic"] = !empty($key) ? $epics[$key] : "";
 		}
 		return $tickets;
-	}	
+	}
 }

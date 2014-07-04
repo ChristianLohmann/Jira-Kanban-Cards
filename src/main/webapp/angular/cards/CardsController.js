@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('jiraKanbanCards').controller('CardsController', ['$scope', '$location', '$window', 'jira',
-    function ($scope, $location, $window, jira) {
+angular.module('jiraKanbanCards').controller('CardsController', ['$scope', '$location', '$window', 'JiraService',
+    function ($scope, $location, $window, JiraService) {
 
         var self = this;
 
@@ -22,10 +22,10 @@ angular.module('jiraKanbanCards').controller('CardsController', ['$scope', '$loc
             /**
              * create jira object and establish connection
              */
-            if ($scope.path) {
-                jira.setUrl($scope.path);
-            }
-            jira.$auth($scope.username, $scope.password);
+//            if ($scope.path) {
+//                jira.setUrl($scope.path);
+//            }
+            JiraService.auth({username: $scope.username, password: $scope.password});
 
             /**
              * get and check jql query
@@ -38,7 +38,12 @@ angular.module('jiraKanbanCards').controller('CardsController', ['$scope', '$loc
             /**
              * get tickets from jira
              */
-            jira.getIssuesByJql(trimmedJql, function (data) {
+            var fields = '*all';
+            if (!angular.isUndefined($scope.fields)) {
+                fields = $scope.fields;
+            }
+            var tickets = JiraService.getIssuesByJql({jql: trimmedJql, fields: fields}).$promise.then();
+            JiraService.getIssuesByJql(trimmedJql, fields, function (data) {
                 angular.forEach(data, function (ticket) {
                     self.convertJiraIssueToArray(ticket);
                 });

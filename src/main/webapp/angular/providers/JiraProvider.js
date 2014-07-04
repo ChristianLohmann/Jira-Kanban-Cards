@@ -68,29 +68,27 @@ angular.module('jiraKanbanCards')
                 /**
                  * start to build the header
                  */
-                var config = {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Access-Control-Allow-Origin': '*',
-                        'Access-Control-Allow-Methods': 'POST, GET, PUT, DELETE, OPTIONS',
-                        'Access-Control-Allow-Headers': 'X-Requested-With, content-type'
-                    }
-                };
+//                var config = {
+//                    headers: {
+//                        'Content-Type': 'application/json',
+//                        'Access-Control-Allow-Origin': '*',
+//                        'Access-Control-Allow-Methods': 'POST, GET, PUT, DELETE, OPTIONS',
+//                        'Access-Control-Allow-Headers': 'X-Requested-With, content-type'
+//                    }
+//                };
 
                 /**
                  * add authorization
                  */
-                if (angular.isString(self.username)) {
-                    var credential = $base64.encode(self.username + ':' + self.password);
-                    config.headers.Authorization = 'Basic ' + credential;
-                }
+//                if (angular.isString(self.username)) {
+//                    var credential = $base64.encode(self.username + ':' + self.password);
+//                    config.headers.Authorization = 'Basic ' + credential;
+//                }
 
                 /**
                  * set Content-Length header
                  */
-                config.headers['Content-Length'] = data.length;
-
-                $http.defaults.useXDomain = true;
+//                config.headers['Content-Length'] = data.length;
 
                 if (method === cons.GET) {
                     config.params = data;

@@ -56,7 +56,14 @@ module.exports = function (grunt) {
         connect: {
             proxies: [
                 {
-                    context: '/app',
+                    context: '/',
+                    host: 'localhost',
+                    port: 8080,
+                    https: false,
+                    changeOrigin: false
+                },
+                {
+                    context: '/jira/auth',
                     host: 'localhost',
                     port: 8080,
                     https: false,
@@ -66,7 +73,7 @@ module.exports = function (grunt) {
             options: {
                 port: 9000,
                 // Change this to 'localhost' to deny access to the server from outside.
-                hostname: 'localhost',
+                hostname: '0.0.0.0',
                 livereload: 35729
             },
             livereload: {

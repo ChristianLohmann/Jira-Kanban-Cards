@@ -13,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,14 +31,18 @@ public class JiraResource {
     @Value("jiraUrl")
     private String jiraUrl;
 
+    private String customJiraUrl;
+
     private String username;
 
     private String password;
 
-    @RequestMapping(value = "/issuesByJql", method = RequestMethod.GET)
+    @RequestMapping(value = "/issuesByJql/{fields}/{jql}", method = RequestMethod.GET)
     @ResponseBody
-    public String getIssuesByJql(@RequestParam final String jql, @RequestParam final String fields) {
+    public String getIssuesByJql(@PathVariable("fields") final String fields,
+            @PathVariable("jql") final String jql) {
 
+        final String jiraUrl = customJiraUrl != null ? customJiraUrl : this.jiraUrl;
         try {
             String query = "/search?fields=" + fields + "&maxResults=100&jql="
                     + encodeURIComponent(jql).replaceAll("%252F", "/");
@@ -52,13 +57,16 @@ public class JiraResource {
         return "";
     }
 
-    @RequestMapping(value = "/auth", method = RequestMethod.GET)
-    @ResponseBody
-    public void authenticate(@RequestParam final String username, @RequestParam final String password) {
+    @RequestMapping(value = "/auth/{username}/{password}", method = RequestMethod.GET)
+    public void authenticate(@PathVariable("password") final String password,
+            @PathVariable("username") final String username) {
 
         this.username = username;
         this.password = password;
     }
+
+    @RequestMapping(value = "/url", method = RequestMethod.GET)
+    public void setJiraUrl(@RequestParam final String url) { }
 
     private String encodeURIComponent(final String jql) throws UnsupportedEncodingException {
 

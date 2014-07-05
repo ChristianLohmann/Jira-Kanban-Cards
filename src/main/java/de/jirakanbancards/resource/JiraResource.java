@@ -1,25 +1,16 @@
 package de.jirakanbancards.resource;
 
-import java.io.UnsupportedEncodingException;
-
-import java.net.URLEncoder;
-
 import org.apache.tomcat.util.codec.binary.Base64;
-
 import org.springframework.beans.factory.annotation.Value;
-
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 /**
  * Author: clohmann Date: 03.07.14 Time: 12:53
@@ -40,7 +31,7 @@ public class JiraResource {
     @RequestMapping(value = "/issuesByJql/{fields}/{jql}", method = RequestMethod.GET)
     @ResponseBody
     public String getIssuesByJql(@PathVariable("fields") final String fields,
-            @PathVariable("jql") final String jql) {
+                                 @PathVariable("jql") final String jql) {
 
         final String jiraUrl = customJiraUrl != null ? customJiraUrl : this.jiraUrl;
         try {
@@ -59,14 +50,15 @@ public class JiraResource {
 
     @RequestMapping(value = "/auth/{username}/{password}", method = RequestMethod.GET)
     public void authenticate(@PathVariable("password") final String password,
-            @PathVariable("username") final String username) {
+                             @PathVariable("username") final String username) {
 
         this.username = username;
         this.password = password;
     }
 
     @RequestMapping(value = "/url", method = RequestMethod.GET)
-    public void setJiraUrl(@RequestParam final String url) { }
+    public void setJiraUrl(@RequestParam final String url) {
+    }
 
     private String encodeURIComponent(final String jql) throws UnsupportedEncodingException {
 

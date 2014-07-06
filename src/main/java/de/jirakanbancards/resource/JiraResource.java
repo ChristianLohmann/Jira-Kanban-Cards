@@ -1,6 +1,5 @@
 package de.jirakanbancards.resource;
 
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -24,9 +23,7 @@ public class JiraResource {
 
     private String customJiraUrl;
 
-    private String username;
-
-    private String password;
+    private String auth;
 
     @RequestMapping(value = "/issuesByJql/{fields}/{jql}", method = RequestMethod.GET)
     @ResponseBody
@@ -48,12 +45,10 @@ public class JiraResource {
         return "";
     }
 
-    @RequestMapping(value = "/auth/{username}/{password}", method = RequestMethod.GET)
-    public void authenticate(@PathVariable("password") final String password,
-                             @PathVariable("username") final String username) {
+    @RequestMapping(value = "/auth/{auth}", method = RequestMethod.GET)
+    public void authenticate(@PathVariable("auth") final String auth) {
 
-        this.username = username;
-        this.password = password;
+        this.auth = auth;
     }
 
     @RequestMapping(value = "/url", method = RequestMethod.GET)
@@ -67,15 +62,12 @@ public class JiraResource {
 
     private HttpHeaders createHeaders() {
 
-        final String username = this.username;
-        final String password = this.password;
+        final String auth = this.auth;
 
         return new HttpHeaders() {
 
             {
-                String auth = username + ":" + password;
-                byte[] encodedAuth = Base64.encodeBase64(auth.getBytes());
-                String authHeader = "Basic " + new String(encodedAuth);
+                String authHeader = "Basic " + auth;
                 set("Authorization", authHeader);
 
                 set("Content-Type", "application/json");

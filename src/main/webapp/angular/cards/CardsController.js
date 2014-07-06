@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('jiraKanbanCards').controller('CardsController', ['$scope', '$location', '$window', 'JiraService',
-    function ($scope, $location, $window, JiraService) {
+angular.module('jiraKanbanCards').controller('CardsController', ['$scope', '$location', '$window', 'JiraService', '$base64',
+    function ($scope, $location, $window, JiraService, $base64) {
 
         var self = this;
 
@@ -25,7 +25,8 @@ angular.module('jiraKanbanCards').controller('CardsController', ['$scope', '$loc
 //            if ($scope.path) {
 //                jira.setUrl($scope.path);
 //            }
-            JiraService.auth({username: $scope.username, password: $scope.password});
+            var auth = $base64.encode($scope.username + ':' + $scope.password);
+            JiraService.auth({auth: auth});
 
             /**
              * get and check jql query

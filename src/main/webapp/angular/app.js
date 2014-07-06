@@ -12,8 +12,8 @@ jiraKanbanCards.constant('cons', {
 });
 
 jiraKanbanCards
-    .config(['$routeProvider', '$httpProvider',
-        function ($routeProvider, $httpProvider) {
+    .config(['$routeProvider',
+        function ($routeProvider) {
             $routeProvider
                 .when('/cards', {
                     templateUrl: 'angular/cards/cardSearch.html',

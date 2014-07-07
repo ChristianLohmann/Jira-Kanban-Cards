@@ -48,20 +48,7 @@ angular.module('jiraKanbanCards').controller('CardsController', ['$scope', '$loc
             });
         };
 
-        $scope.getEpicNumber = function (epicName) {
-            var knownEpics = [];
 
-            if (epicName.length === 0) {
-                return '';
-            }
-
-            var arrayPos = knownEpics.indexOf(epicName);
-            if (arrayPos === -1) {
-                knownEpics.push(epicName);
-                arrayPos = knownEpics.indexOf(epicName);
-            }
-            return arrayPos;
-        };
 
         /**
          * add Agile-epic information to a ticket, since a ticket comes with the

@@ -16,7 +16,7 @@ module.exports = function (grunt) {
     grunt.initConfig({
         yeoman: {
             // configurable paths
-            app: require('./bower.json').appPath || 'app',
+            app: require('./bower.json').appPath || 'src/main/webapp',
             dist: 'dist'
         },
         watch: {
@@ -134,7 +134,7 @@ module.exports = function (grunt) {
         compass: {
             options: {
                 sassDir: 'src/main/scss',
-                cssDir: 'style',
+                cssDir: 'src/main/webapp/style',
                 generatedImagesDir: '.tmp/images/generated',
                 imagesDir: 'images',
                 javascriptsDir: '<%= yeoman.app %>/angular',

@@ -1,1 +1,2 @@
-jiraUrl:
+jira:
+    url: https://techjira.zalando.net/rest/api/latest

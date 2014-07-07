@@ -1,17 +1,29 @@
 package de.jirakanbancards.resource;
 
-import de.jirakanbancards.domain.Ticket;
+import java.io.UnsupportedEncodingException;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.List;
+import com.google.common.escape.Escaper;
+import com.google.common.net.UrlEscapers;
+
+import de.jirakanbancards.domain.JiraSearchResult;
+import de.jirakanbancards.domain.Ticket;
 
 /**
  * Author: clohmann Date: 03.07.14 Time: 12:53
@@ -20,7 +32,7 @@ import java.util.List;
 @RequestMapping("/jira")
 public class JiraResource {
 
-    @Value("jiraUrl")
+    @Value("${jira.url}")
     private String jiraUrl;
 
     private String customJiraUrl;
@@ -29,22 +41,16 @@ public class JiraResource {
 
     @RequestMapping(value = "/issuesByJql/{fields}/{jql}", method = RequestMethod.GET)
     @ResponseBody
-    public List getIssuesByJql(@PathVariable("fields") final String fields,
-                                 @PathVariable("jql") final String jql) {
+    public List<Ticket> getIssuesByJql(@PathVariable("fields") final String fields,
+            @PathVariable("jql") final String jql) {
 
         final String jiraUrl = customJiraUrl != null ? customJiraUrl : this.jiraUrl;
-        try {
-            String query = "/search?fields=" + fields + "&maxResults=100&jql="
-                    + encodeURIComponent(jql).replaceAll("%252F", "/");
-            RestTemplate rest = new RestTemplate();
-            final ResponseEntity<List> exchange = rest.exchange(jiraUrl + query, HttpMethod.GET,
-                    new HttpEntity<String>(createHeaders()), List.class);
-            return exchange.getBody();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        return newArrayli;
+        String query = "/search?fields=" + fields + "&maxResults=100&jql=" + jql;
+        RestTemplate rest = new RestTemplate();
+        final ResponseEntity<JiraSearchResult> exchange = rest.exchange(jiraUrl + query, HttpMethod.GET,
+                new HttpEntity<String>(createHeaders()), JiraSearchResult.class);
+        final JiraSearchResult body = exchange.getBody();
+        return body.getIssues();
     }
 
     @RequestMapping(value = "/auth/{auth}", method = RequestMethod.GET)
@@ -54,12 +60,12 @@ public class JiraResource {
     }
 
     @RequestMapping(value = "/url", method = RequestMethod.GET)
-    public void setJiraUrl(@RequestParam final String url) {
-    }
+    public void setJiraUrl(@RequestParam final String url) { }
 
     private String encodeURIComponent(final String jql) throws UnsupportedEncodingException {
 
-        return URLEncoder.encode(jql, "UTF-8");
+        final Escaper escaper = UrlEscapers.urlPathSegmentEscaper();
+        return escaper.escape(jql);
     }
 
     private HttpHeaders createHeaders() {

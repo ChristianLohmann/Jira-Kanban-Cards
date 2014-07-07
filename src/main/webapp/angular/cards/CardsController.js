@@ -1,9 +1,11 @@
 'use strict';
 
-angular.module('jiraKanbanCards').controller('CardsController', ['$scope', '$location', '$window', 'JiraService', '$base64',
-    function ($scope, $location, $window, JiraService, $base64) {
+angular.module('jiraKanbanCards').controller('CardsController', ['$scope', '$location', '$window', 'JiraService', '$base64', '$http', 'TicketService',
+    function ($scope, $location, $window, JiraService, $base64, $http, TicketService) {
 
         var self = this;
+
+        var tickets = $scope.tickets = [];
 
         $scope.epicInfo = {
             'include': {
@@ -22,9 +24,6 @@ angular.module('jiraKanbanCards').controller('CardsController', ['$scope', '$loc
             /**
              * create jira object and establish connection
              */
-//            if ($scope.path) {
-//                jira.setUrl($scope.path);
-//            }
             var auth = $base64.encode($scope.username + ':' + $scope.password);
             JiraService.auth({auth: auth});
 
@@ -43,11 +42,9 @@ angular.module('jiraKanbanCards').controller('CardsController', ['$scope', '$loc
             if (!angular.isUndefined($scope.fields)) {
                 fields = $scope.fields;
             }
-            var tickets = JiraService.getIssuesByJql({jql: trimmedJql, fields: fields}).$promise.then();
-            JiraService.getIssuesByJql(trimmedJql, fields, function (data) {
-                angular.forEach(data, function (ticket) {
-                    self.convertJiraIssueToArray(ticket);
-                });
+            JiraService.getIssuesByJql({fields: fields, jql: trimmedJql}, function (data) {
+                TicketService.tickets = data;
+                $location.path('/tickets');
             });
         };
 
@@ -64,58 +61,6 @@ angular.module('jiraKanbanCards').controller('CardsController', ['$scope', '$loc
                 arrayPos = knownEpics.indexOf(epicName);
             }
             return arrayPos;
-        };
-
-
-        /**
-         * put the issues in a format we can work with,
-         * so limit to the most used values
-         */
-        self.convertJiraIssueToArray = function (ticket) {
-
-            /**
-             * format the time to a readable value
-             */
-            var time = ticket.fields.timeoriginalestimate;
-
-            /**
-             * collect the basic fields from jira
-             */
-            var collectedTicket = {
-                'priority': ticket.fields.priority.name,
-                'issuetype': ticket.fields.issuetype.name,
-                'key': ticket.key,
-                'summary': ticket.fields.summary,
-                'reporter': ticket.fields.reporter ? ticket.fields.reporter.displayName : 'n/a',
-                'assignee': ticket.fields.assignee ? ticket.fields.assignee.displayName : 'n/a',
-                'remaining_time': time
-            };
-
-
-            /**
-             * add custom fields from Jira Agile (epic and rank)
-             */
-            var customFields = [
-                {
-                    'key': 'customfield_11100',
-                    'name': 'epickey'
-                },
-                {
-                    'key': 'customfield_10004',
-                    'name': 'rank'
-                }
-            ];
-
-            angular.forEach(customFields, function (customField) {
-                if (ticket.fields[customField.key] !== undefined) {
-                    collectedTicket[customField.name] = ticket[customField.key];
-                }
-            });
-
-            /**
-             * return total collection
-             */
-            return collectedTicket;
         };
 
         /**

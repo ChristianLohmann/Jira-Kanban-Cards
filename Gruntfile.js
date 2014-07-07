@@ -33,7 +33,7 @@ module.exports = function (grunt) {
                     livereload: 35729
                 },
                 files: [
-                    '<%= yeoman.app %>/{,*/}*.html',
+                    '<%= yeoman.app %>/angular/{,*/}*.html',
                     '.tmp/styles/{,*/}*.css',
                     '{.tmp/,}<%= yeoman.app %>/angular/{,*/}*.js',
                     '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'

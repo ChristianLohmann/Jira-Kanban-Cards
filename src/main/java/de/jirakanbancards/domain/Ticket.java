@@ -1,7 +1,5 @@
 package de.jirakanbancards.domain;
 
-import java.util.List;
-
 /**
  * Author: clohmann Date: 03.07.14 Time: 13:11
  */
@@ -15,13 +13,13 @@ public class Ticket {
 
     private String expand;
 
-    private List<String> fields;
+    private Fields fields;
 
     public long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(final long id) {
         this.id = id;
     }
 
@@ -29,7 +27,7 @@ public class Ticket {
         return key;
     }
 
-    public void setKey(String key) {
+    public void setKey(final String key) {
         this.key = key;
     }
 
@@ -37,7 +35,7 @@ public class Ticket {
         return self;
     }
 
-    public void setSelf(String self) {
+    public void setSelf(final String self) {
         this.self = self;
     }
 
@@ -45,15 +43,17 @@ public class Ticket {
         return expand;
     }
 
-    public void setExpand(String expand) {
+    public void setExpand(final String expand) {
         this.expand = expand;
     }
 
-    public List<String> getFields() {
+    public Fields getFields() {
+
         return fields;
     }
 
-    public void setFields(List<String> fields) {
+    public void setFields(final Fields fields) {
+
         this.fields = fields;
     }
 }

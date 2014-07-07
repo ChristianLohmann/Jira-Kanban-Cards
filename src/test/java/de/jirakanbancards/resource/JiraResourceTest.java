@@ -1,7 +1,5 @@
 package de.jirakanbancards.resource;
 
-import java.util.LinkedHashMap;
-
 import org.junit.Test;
 
 import org.springframework.http.HttpEntity;
@@ -22,12 +20,14 @@ public class JiraResourceTest {
             "https://techjira.zalando.net/rest/api/latest/search?fields=summary&maxResults=100&jql=labels in (edi-preorder) AND status != Closed&0=*&1=a&2=l&3=l";
 
         RestTemplate restTemplate = new RestTemplate();
-        final ResponseEntity<LinkedHashMap> exchange = restTemplate.exchange(url, HttpMethod.GET,
-                new HttpEntity<String>(createHeaders()), LinkedHashMap.class);
-        final LinkedHashMap body = exchange.getBody();
-        for (Object key : body.keySet()) {
-            System.out.println(body.get(key));
-        }
+        final ResponseEntity<String> exchange = restTemplate.exchange(url, HttpMethod.GET,
+                new HttpEntity<String>(createHeaders()), String.class);
+
+// final LinkedHashMap body = exchange.getBody();
+// for (Object key : body.keySet()) {
+// System.out.println(body.get(key));
+// }
+        System.out.println(exchange.getBody());
 // restTemplate.getForObject()
     }
 

@@ -21,7 +21,7 @@ jiraKanbanCards
                 })
                 .when('/tickets', {
                     templateUrl: 'angular/cards/tickets.html',
-                    controller: 'CardsController'
+                    controller: 'TicketsController'
                 })
                 .otherwise({
                     templateUrl: 'angular/cards/cardSearch.html',

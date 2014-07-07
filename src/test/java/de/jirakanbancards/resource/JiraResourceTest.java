@@ -11,8 +11,6 @@ import org.springframework.web.client.RestTemplate;
 
 public class JiraResourceTest {
 
-    private String auth = "Y2xvaG1hbm46SnVuaXAyMDEz";
-
     @Test
     public void testGetIssuesByJql() throws Exception {
 

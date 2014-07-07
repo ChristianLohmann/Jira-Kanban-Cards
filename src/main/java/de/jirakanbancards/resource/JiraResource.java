@@ -1,5 +1,6 @@
 package de.jirakanbancards.resource;
 
+import de.jirakanbancards.domain.Ticket;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -10,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.List;
 
 /**
  * Author: clohmann Date: 03.07.14 Time: 12:53
@@ -27,7 +29,7 @@ public class JiraResource {
 
     @RequestMapping(value = "/issuesByJql/{fields}/{jql}", method = RequestMethod.GET)
     @ResponseBody
-    public String getIssuesByJql(@PathVariable("fields") final String fields,
+    public List getIssuesByJql(@PathVariable("fields") final String fields,
                                  @PathVariable("jql") final String jql) {
 
         final String jiraUrl = customJiraUrl != null ? customJiraUrl : this.jiraUrl;
@@ -35,14 +37,14 @@ public class JiraResource {
             String query = "/search?fields=" + fields + "&maxResults=100&jql="
                     + encodeURIComponent(jql).replaceAll("%252F", "/");
             RestTemplate rest = new RestTemplate();
-            final ResponseEntity<String> exchange = rest.exchange(jiraUrl + query, HttpMethod.GET,
-                    new HttpEntity<String>(createHeaders()), String.class);
+            final ResponseEntity<List> exchange = rest.exchange(jiraUrl + query, HttpMethod.GET,
+                    new HttpEntity<String>(createHeaders()), List.class);
             return exchange.getBody();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
 
-        return "";
+        return newArrayli;
     }
 
     @RequestMapping(value = "/auth/{auth}", method = RequestMethod.GET)

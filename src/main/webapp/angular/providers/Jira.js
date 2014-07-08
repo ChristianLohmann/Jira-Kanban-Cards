@@ -15,6 +15,10 @@ angular.module('jiraKanbanCards').factory('JiraService', [ '$resource', function
         'auth': {
             'url': 'jira/auth/:auth',
             'method': 'GET'
+        },
+        'jiraUrl': {
+            'url': 'jira/url',
+            'method': 'GET'
         }
 
     });

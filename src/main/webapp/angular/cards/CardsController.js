@@ -29,6 +29,11 @@ angular.module('jiraKanbanCards').controller('CardsController', ['$scope', '$loc
             var auth = $base64.encode($scope.username + ':' + $scope.password);
             JiraService.auth({auth: auth});
 
+            var url = $scope.path;
+            if (!angular.isUndefined(url)) {
+                JiraService.jiraUrl({url: url});
+            }
+
             /**
              * get and check jql query
              */

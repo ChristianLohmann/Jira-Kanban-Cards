@@ -152,61 +152,6 @@ module.exports = function (grunt) {
                 }
             }
         },
-        // not used since Uglify task does concat,
-        // but still available if needed
-        /*concat: {
-         dist: {}
-         },*/
-        rev: {
-            dist: {
-                files: {
-                    src: [
-                        '<%= yeoman.dist %>/scripts/{,*/}*.js',
-                        '<%= yeoman.dist %>/styles/{,*/}*.css',
-                        '<%= yeoman.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
-                        '<%= yeoman.dist %>/fonts/*'
-                    ]
-                }
-            }
-        },
-        useminPrepare: {
-            html: '{,*/}*.html',
-            options: {
-                dest: '<%= yeoman.dist %>'
-            }
-        },
-        usemin: {
-            html: ['<%= yeoman.dist %>/{,*/}*.html'],
-            css: ['<%= yeoman.dist %>/styles/{,*/}*.css'],
-            options: {
-                dirs: ['<%= yeoman.dist %>']
-            }
-        },
-        imagemin: {
-            dist: {
-                files: [
-                    {
-                        expand: true,
-                        cwd: 'images',
-                        src: '{,*/}*.{jpg,jpeg}', // we don't optimize PNG files as it doesn't work on Linux. If you are not on Linux, feel free to use '{,*/}*.{png,jpg,jpeg}'
-                        dest: '<%= yeoman.dist %>/images'
-                    }
-                ]
-            }
-        },
-        svgmin: {
-            dist: {
-                files: [
-                    {
-                        expand: true,
-                        cwd: 'images',
-                        src: '{,*/}*.svg',
-                        dest: '<%= yeoman.dist %>/images'
-                    }
-                ]
-            }
-        },
-        // Put files not handled in other tasks here
         copy: {
             dist: {
                 files: [
@@ -248,62 +193,7 @@ module.exports = function (grunt) {
             server: [
                 'compass:server',
                 'copy:styles'
-            ],
-            test: [
-                'compass',
-                'copy:styles'
-            ],
-            dist: [
-                'compass:dist',
-                'copy:styles',
-                'imagemin',
-                'svgmin',
-                'htmlmin'
             ]
-        },
-        karma: {
-            unit: {
-                configFile: '<%= yeoman.app %>/angular/test/javascript/karma.conf.js',
-                singleRun: true
-            }
-        },
-        cdnify: {
-            dist: {
-                html: ['<%= yeoman.dist %>/*.html']
-            }
-        },
-        ngmin: {
-            dist: {
-                files: [
-                    {
-                        expand: true,
-                        cwd: '.tmp/concat/scripts',
-                        src: '*.js',
-                        dest: '.tmp/concat/scripts'
-                    }
-                ]
-            }
-        },
-        replace: {
-            dist: {
-                src: ['<%= yeoman.dist %>/index.html'],
-                overwrite: true,                 // overwrite matched source files
-                replacements: [
-                    {
-                        from: '<div class="development"></div>',
-                        to: ''
-                    }
-                ]
-            }
-        },
-        uglify: {
-            dist: {
-                files: {
-                    '<%= yeoman.dist %>/scripts/scripts.js': [
-                        '<%= yeoman.dist %>/scripts/scripts.js'
-                    ]
-                }
-            }
         }
     });
 
@@ -321,32 +211,4 @@ module.exports = function (grunt) {
             'watch'
         ]);
     });
-
-    grunt.registerTask('test', [
-        'clean:server',
-        'concurrent:test',
-        'autoprefixer',
-        'connect:test',
-        'karma'
-    ]);
-
-    grunt.registerTask('build', [
-        'clean:dist',
-        'useminPrepare',
-        'concurrent:dist',
-        'autoprefixer',
-        'concat',
-        'copy:dist',
-        'ngmin',
-        'cssmin',
-        'replace',
-        'uglify',
-        'rev',
-        'usemin'
-    ]);
-
-    grunt.registerTask('default', [
-        'test',
-        'build'
-    ]);
 };

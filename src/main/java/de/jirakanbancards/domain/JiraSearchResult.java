@@ -94,7 +94,9 @@ public class JiraSearchResult {
                     if (epics.containsKey(ticket.getFields().getEpicLink())) {
                         epics.get(ticket.getFields().getEpicLink()).add(ticket);
                     } else {
-                        epics.put(ticket.getFields().getEpicLink(), newArrayList(ticket));
+                        if (ticket.getFields().getEpicLink() != null) {
+                            epics.put(ticket.getFields().getEpicLink(), newArrayList(ticket));
+                        }
                     }
                 }
 

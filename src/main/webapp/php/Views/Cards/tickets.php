@@ -7,7 +7,7 @@
 class CardsHelper {
 
 	protected $knownEpics = array();
-	
+
 	public function getEpicNumber($epicname) {
 		if(empty($epicname)) return "";
 		$array_pos = array_search( $epicname, $this->knownEpics );
@@ -37,6 +37,6 @@ $helper = new CardsHelper();
 	<?php } ?>
 	<div class="reporter"><?php echo $ticket["reporter"] ?></div>
 	<div class="assignee"><?php echo $ticket["assignee"] ?></div>
-	<div class="remaining_time"><?php echo $ticket["remaining_time"] ?></div>
+	<div class="fix-version"><?php echo $ticket["remaining_time"] ?></div>
 </div>
 <?php } ?>

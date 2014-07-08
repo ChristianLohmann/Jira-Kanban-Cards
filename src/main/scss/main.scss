@@ -149,13 +149,13 @@ div.ticket div.rank:before {
   color: $darker-gray;
 }
 
-div.ticket div.remaining_time {
+div.ticket div.fix-version {
   float: right;
   white-space: nowrap;
 }
 
-div.ticket div.remaining_time:before {
-  content: "Time: ";
+div.ticket div.fix-version:before {
+  content: "Fix Version: ";
   color: $darker-gray;
 }
 

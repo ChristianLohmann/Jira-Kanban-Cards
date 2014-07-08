@@ -9,5 +9,5 @@
     <div class="rank" ng-if="ticket.rank">{{ticket.fields.rank}}</div>
     <div class="reporter">{{ticket.fields.reporter.displayName}}</div>
     <div class="assignee">{{ticket.fields.assignee.displayName}}</div>
-    <div class="remaining_time" ng-if="ticket.fields.fixVersions">{{ticket.fields.fixVersions[0].name}}</div>
+    <div class="fix-version" ng-if="ticket.fields.fixVersions">{{ticket.fields.fixVersions[0].name}}</div>
 </div>

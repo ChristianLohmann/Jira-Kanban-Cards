@@ -3,8 +3,6 @@
 angular.module('jiraKanbanCards').controller('CardsController', ['$scope', '$location', '$window', 'JiraService', '$base64', '$http', 'TicketService',
     function ($scope, $location, $window, JiraService, $base64, $http, TicketService) {
 
-        var self = this;
-
         var tickets = $scope.tickets = [];
 
         $scope.epicInfoChoice = [
@@ -56,47 +54,4 @@ angular.module('jiraKanbanCards').controller('CardsController', ['$scope', '$loc
                 $location.path('/tickets');
             });
         };
-
-
-        /**
-         * add Agile-epic information to a ticket, since a ticket comes with the
-         * link to the epic, but we need to names, which we need to fetch from Jira seperatly
-         */
-        self.addEpicNames = function (tickets) {
-
-            /**
-             * collect all different keys
-             */
-            var epicKeys = [];
-            angular.forEach(tickets, function (ticket) {
-
-                if (angular.isString(ticket.epicLink)) {
-                    var key = ticket.epicLink.trim();
-                    if (key.length !== 0) {
-                        this.push(key);
-                    }
-                }
-            }, epicKeys);
-
-            if (epicKeys.length === 0) {
-                return tickets;
-            }
-
-
-            /**
-             * get names pro jira and convert into nicer structure
-             */
-            var epics = JiraService.getIssuesByJql('key IN (' + epicKeys.join() + ')', 'key,epicName');
-
-            /**
-             * modify tickets and add epic names
-             */
-            angular.forEach(tickets, function (ticket) {
-
-                var key = ticket.epicLink.trim();
-                ticket.epicName = key.length !== 0 ? epics[key] : '';
-            });
-            return tickets;
-        };
-    }])
-;
+    }]);

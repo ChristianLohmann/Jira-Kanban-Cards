@@ -1,7 +1,9 @@
 <div class="ticket" ng-repeat="ticket in tickets">
     <div class="priority" ng-class="ticket.fields.priority.name | lowercase"></div>
     <div class="issuetype" ng-class="trim(ticket.fields.issuetype.name) | lowercase"></div>
-    <div class="epic" ng-if="ticket.fields.epicLink" ng-class="'epicgroup_' + getEpicNumber(ticket.fields.epicLink)">{{ticket.fields.epicLink}}</div>
+    <div class="epic" ng-if="ticket.fields.epicLink" ng-class="'epicgroup_' + getEpicNumber(ticket.fields.epicLink)">
+        {{ticket.fields.epicName ? ticket.fields.epicName : ticket.fields.epicLink}}
+    </div>
     <div class="number">{{ticket.key}}</div>
     <div class="summary">{{ticket.fields.summary}}</div>
     <div class="rank" ng-if="ticket.rank">{{ticket.fields.rank}}</div>

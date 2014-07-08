@@ -5,9 +5,6 @@
         <p>Put your JQL query below and press the button to get the pretty print-version of your tickets:</p>
 
         <div class="jirainfo">
-            <label>Jira-Path: </label>
-            <input type="text" ng-model="path">
-            <br/>
 
             <label>Username: </label>
             <input type="text" ng-model="username"/>
@@ -20,7 +17,7 @@
             <label>Epic: </label>
             <select
                     ng-model="selectedEpicInfo"
-                    ng-options="value as value.text for value in epicInfo">
+                    ng-options="value as value.text for value in epicInfoChoice">
             </select>
             <br/>
 

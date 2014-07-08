@@ -1,9 +1,8 @@
 package de.jirakanbancards.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * Author: clohmann Date: 07.07.14 Time: 12:19
@@ -131,7 +130,7 @@ public class Fields {
         return customfield_14531;
     }
 
-    public void setCustomfield_14531(String customfield_14531) {
+    public void setCustomfield_14531(final String customfield_14531) {
         this.customfield_14531 = customfield_14531;
     }
 
@@ -139,12 +138,16 @@ public class Fields {
         return customfield_14533;
     }
 
-    public void setCustomfield_14533(String customfield_14533) {
+    public void setCustomfield_14533(final String customfield_14533) {
         this.customfield_14533 = customfield_14533;
     }
 
     public String getEpicName() {
         return customfield_14532;
+    }
+
+    public void setEpicName(final String name) {
+        this.customfield_14532 = name;
     }
 
     public String getEpicLink() {
@@ -159,7 +162,7 @@ public class Fields {
         return customfield_14532;
     }
 
-    public void setCustomfield_14532(String customfield_14532) {
+    public void setCustomfield_14532(final String customfield_14532) {
         this.customfield_14532 = customfield_14532;
     }
 
@@ -167,7 +170,7 @@ public class Fields {
         return fixVersions;
     }
 
-    public void setFixVersions(List<FixVersion> fixVersions) {
+    public void setFixVersions(final List<FixVersion> fixVersions) {
         this.fixVersions = fixVersions;
     }
 }

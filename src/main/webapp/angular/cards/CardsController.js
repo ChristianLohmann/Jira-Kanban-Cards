@@ -7,14 +7,16 @@ angular.module('jiraKanbanCards').controller('CardsController', ['$scope', '$loc
 
         var tickets = $scope.tickets = [];
 
-        $scope.epicInfo = {
-            'include': {
-                text: 'Include information'
+        $scope.epicInfoChoice = [
+            {
+                text: 'Include information',
+                epicInfo: true
             },
-            'exclude': {
-                text: 'Exclude information'
+            {
+                text: 'Exclude information',
+                epicInfo: false
             }
-        };
+        ];
 
         /**
          * Show tickets based on user given JQL query
@@ -42,12 +44,13 @@ angular.module('jiraKanbanCards').controller('CardsController', ['$scope', '$loc
             if (!angular.isUndefined($scope.fields)) {
                 fields = $scope.fields;
             }
-            JiraService.getIssuesByJql({fields: fields, jql: trimmedJql}, function (data) {
+            var selectedEpicInfoChoice = !angular.isUndefined($scope.selectedEpicInfo) ? $scope.selectedEpicInfo.epicInfo : false;
+
+            JiraService.getIssuesByJql({fields: fields, jql: trimmedJql, epicInfo: selectedEpicInfoChoice}, function (data) {
                 TicketService.tickets = data;
                 $location.path('/tickets');
             });
         };
-
 
 
         /**
@@ -59,18 +62,18 @@ angular.module('jiraKanbanCards').controller('CardsController', ['$scope', '$loc
             /**
              * collect all different keys
              */
-            var epickeys = [];
+            var epicKeys = [];
             angular.forEach(tickets, function (ticket) {
 
-                if (angular.isString(ticket.epickey)) {
-                    var key = ticket.epickey.trim();
-                    if (key.length !== 0 && angular.isUndefined(this.getElementById(key))) {
+                if (angular.isString(ticket.epicLink)) {
+                    var key = ticket.epicLink.trim();
+                    if (key.length !== 0) {
                         this.push(key);
                     }
                 }
-            }, epickeys);
+            }, epicKeys);
 
-            if (epickeys.length === 0) {
+            if (epicKeys.length === 0) {
                 return tickets;
             }
 
@@ -78,19 +81,17 @@ angular.module('jiraKanbanCards').controller('CardsController', ['$scope', '$loc
             /**
              * get names pro jira and convert into nicer structure
              */
-            var rawEpics = jira.getIssuesByJql('key IN (' + epickeys.join() + ')', 'key,customfield_11101');
-            var epics = {};
-            angular.forEach(rawEpics.issues, function (epic) {
-                epics[epic.key] = epic.fields.customfield_11101;
-            });
+            var epics = JiraService.getIssuesByJql('key IN (' + epicKeys.join() + ')', 'key,epicName');
 
             /**
              * modify tickets and add epic names
              */
-            for (var i = 0; i < tickets.length; i++) {
-                var key = tickets[i].epickey.trim();
-                tickets[i].epic = key.length !== 0 ? epics[key] : '';
-            }
+            angular.forEach(tickets, function (ticket) {
+
+                var key = ticket.epicLink.trim();
+                ticket.epicName = key.length !== 0 ? epics[key] : '';
+            });
             return tickets;
         };
-    }]);
+    }])
+;

@@ -8,13 +8,9 @@
 angular.module('jiraKanbanCards').factory('JiraService', [ '$resource', function ($resource) {
     return $resource('', null, {
         'getIssuesByJql': {
-            'url': 'jira/issuesByJql/:fields/:jql',
+            'url': 'jira/issuesByJql',
             'method': 'GET',
-            'isArray': true,
-            'transformResponse': function (data) {
-                var json = JSON.parse(data);
-                return json;
-            }
+            'isArray': true
         },
         'auth': {
             'url': 'jira/auth/:auth',

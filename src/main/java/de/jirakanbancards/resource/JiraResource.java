@@ -1,8 +1,9 @@
 package de.jirakanbancards.resource;
 
-import java.io.UnsupportedEncodingException;
+import static com.google.common.base.Joiner.on;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 
@@ -39,18 +40,22 @@ public class JiraResource {
 
     private String auth;
 
-    @RequestMapping(value = "/issuesByJql/{fields}/{jql}", method = RequestMethod.GET)
+    @RequestMapping(value = "/issuesByJql", method = RequestMethod.GET)
     @ResponseBody
-    public List<Ticket> getIssuesByJql(@PathVariable("fields") final String fields,
-            @PathVariable("jql") final String jql) {
+    public List<Ticket> getIssuesByJql(@RequestParam("fields") final String fields,
+            @RequestParam("jql") final String jql, @RequestParam final Boolean epicInfo) {
 
         final String jiraUrl = customJiraUrl != null ? customJiraUrl : this.jiraUrl;
         String query = "/search?fields=" + fields + "&maxResults=100&jql=" + jql;
         RestTemplate rest = new RestTemplate();
         final ResponseEntity<JiraSearchResult> exchange = rest.exchange(jiraUrl + query, HttpMethod.GET,
                 new HttpEntity<String>(createHeaders()), JiraSearchResult.class);
-        final JiraSearchResult body = exchange.getBody();
-        return body.getIssues();
+        final JiraSearchResult searchResult = exchange.getBody();
+        if (epicInfo) {
+            addEpicsInfo(searchResult);
+        }
+
+        return searchResult.getIssues();
     }
 
     @RequestMapping(value = "/auth/{auth}", method = RequestMethod.GET)
@@ -66,6 +71,25 @@ public class JiraResource {
 
         final Escaper escaper = UrlEscapers.urlPathSegmentEscaper();
         return escaper.escape(jql);
+    }
+
+    private JiraSearchResult addEpicsInfo(final JiraSearchResult issueResult) {
+
+        final Map<String, List<Ticket>> ticketsByEpics = issueResult.getTicketsByEpics();
+        String query = "/search?fields=key,customfield_14532&maxResults=100&jql=key IN ("
+                + on(",").join(ticketsByEpics.keySet()) + ")";
+        RestTemplate rest = new RestTemplate();
+        final ResponseEntity<JiraSearchResult> exchange = rest.exchange(jiraUrl + query, HttpMethod.GET,
+                new HttpEntity<String>(createHeaders()), JiraSearchResult.class);
+        final JiraSearchResult epicsResult = exchange.getBody();
+        for (Ticket epic : epicsResult.getIssues()) {
+            for (Ticket ticket : ticketsByEpics.get(epic.getKey())) {
+                ticket.getFields().setEpicName(epic.getFields().getEpicName());
+            }
+
+        }
+
+        return issueResult;
     }
 
     private HttpHeaders createHeaders() {

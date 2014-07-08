@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import com.google.common.base.Strings;
+
 import de.jirakanbancards.domain.JiraSearchResult;
 import de.jirakanbancards.domain.Ticket;
 
@@ -103,7 +105,7 @@ public class JiraResource {
 
     private String getJiraUrl() {
 
-        return customJiraUrl != null ? customJiraUrl : this.jiraUrl;
+        return !Strings.isNullOrEmpty(customJiraUrl) ? customJiraUrl : this.jiraUrl;
     }
 
 }

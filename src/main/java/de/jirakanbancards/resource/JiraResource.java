@@ -4,6 +4,7 @@ import static com.google.common.base.Joiner.on;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Value;
 
@@ -72,17 +73,21 @@ public class JiraResource {
     private JiraSearchResult addEpicsInfo(final JiraSearchResult issueResult) {
 
         final Map<String, List<Ticket>> ticketsByEpics = issueResult.getTicketsByEpics();
-        String query = "/search?fields=key,customfield_14532&maxResults=100&jql=key IN ("
-                + on(",").skipNulls().join(ticketsByEpics.keySet()) + ")";
-        RestTemplate rest = new RestTemplate();
-        final ResponseEntity<JiraSearchResult> exchange = rest.exchange(getJiraUrl() + query, HttpMethod.GET,
-                new HttpEntity<String>(createHeaders()), JiraSearchResult.class);
-        final JiraSearchResult epicsResult = exchange.getBody();
-        for (Ticket epic : epicsResult.getIssues()) {
-            for (Ticket ticket : ticketsByEpics.get(epic.getKey())) {
-                ticket.getFields().setEpicName(epic.getFields().getEpicName());
-            }
+        final Set<String> keys = ticketsByEpics.keySet();
 
+        if (!keys.isEmpty()) {
+            String query = "/search?fields=key,customfield_14532&maxResults=100&jql=key IN ("
+                    + on(",").skipNulls().join(keys) + ")";
+            RestTemplate rest = new RestTemplate();
+            final ResponseEntity<JiraSearchResult> exchange = rest.exchange(getJiraUrl() + query, HttpMethod.GET,
+                    new HttpEntity<String>(createHeaders()), JiraSearchResult.class);
+            final JiraSearchResult epicsResult = exchange.getBody();
+            for (Ticket epic : epicsResult.getIssues()) {
+                for (Ticket ticket : ticketsByEpics.get(epic.getKey())) {
+                    ticket.getFields().setEpicName(epic.getFields().getEpicName());
+                }
+
+            }
         }
 
         return issueResult;

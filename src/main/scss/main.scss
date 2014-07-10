@@ -9,6 +9,11 @@ $epic-group-6-color: #FFE900 !default;
 $epic-group-7-color: #B90091 !default;
 $epic-group-8-color: #540EAD !default;
 
+$ticket-color-bug: #F0C5C5 !default;
+$ticket-color-improvement: #EBE5B9 !default;
+$ticket-color-task: #D0E7F7 !default;
+$ticket-color-newfeature: #ADEDB2 !default;
+
 $light-gray: #999 !default;
 $darker-gray: #666 !default;
 $white: #fff !default;
@@ -85,6 +90,19 @@ div.ticket {
   overflow: hidden;
 }
 
+div.ticket div.header {
+  background-color: $white;
+  border: 1px solid $light-gray;
+  padding: 1%;
+
+}
+
+div.ticket.bug { background-color: $ticket-color-bug; }
+div.ticket.task { background-color: $ticket-color-task; }
+div.ticket.sub-task { background-color: $ticket-color-task; }
+div.ticket.improvement { background-color: $ticket-color-improvement; }
+div.ticket.newfeature { background-color: $ticket-color-newfeature; }
+
 div.ticket div.summary {
   font-weight: bold;
   margin-top: 1em;
@@ -108,6 +126,10 @@ div.ticket div.epic {
   border-radius: 2px;
   padding: 0 0.5em 0 0.5em;
   color: $white;
+}
+
+div.ticket div.number {
+  font-weight: bold;
 }
 
 div.epic.epicgroup_0 { background-color: $epic-group-0-color }

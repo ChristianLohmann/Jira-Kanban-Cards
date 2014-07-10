@@ -46,9 +46,9 @@ module.exports = function (grunt) {
                 files: [
                     {
                         expand: true,
-                        cwd: '.tmp/styles/',
-                        src: '{,*/}*.css',
-                        dest: '.tmp/styles/'
+                        cwd: 'src/main/webapp/style/',
+                        src: 'main.css',
+                        dest: 'src/main/webapp/style/'
                     }
                 ]
             }
@@ -107,28 +107,13 @@ module.exports = function (grunt) {
                 }
             }
         },
-        clean: {
-            dist: {
-                files: [
-                    {
-                        dot: true,
-                        src: [
-                            '.tmp',
-                            '<%= yeoman.dist %>/*',
-                            '!<%= yeoman.dist %>/.git*'
-                        ]
-                    }
-                ]
-            },
-            server: '.tmp'
-        },
         jshint: {
             options: {
                 jshintrc: '.jshintrc'
             },
             all: [
                 'Gruntfile.js',
-                'angular/{,*/}*.js'
+                'src/main/webapp/angular/{,*/}*.js'
             ]
         },
         compass: {
@@ -152,36 +137,13 @@ module.exports = function (grunt) {
                 }
             }
         },
-        copy: {
-            dist: {
-                files: [
-                    {
-                        expand: true,
-                        dot: true,
-                        cwd: '.',
-                        dest: '<%= yeoman.dist %>',
-                        src: [
-                            '*.{ico,png,txt}',
-                            '.htaccess',
-                            '<%= yeoman.app %>/images/{,*/}*.{png,gif,webp}',
-                            'fonts/*'
-                        ]
-                    },
-                    {
-                        expand: true,
-                        cwd: '.tmp/images',
-                        dest: '<%= yeoman.dist %>/images',
-                        src: [
-                            'generated/*'
-                        ]
-                    }
-                ]
-            },
-            styles: {
+        cssmin: {
+            minify: {
                 expand: true,
-                cwd: 'style',
-                dest: '.tmp/styles/',
-                src: '{,*/}*.css'
+                cwd: 'src/main/webapp/style',
+                src: ['main.css', '!*.min.css'],
+                dest: 'src/main/webapp/style',
+                ext: '.css'
             }
         },
         concurrent: {
@@ -191,8 +153,7 @@ module.exports = function (grunt) {
             },
 
             server: [
-                'compass:server',
-                'copy:styles'
+                'compass:server'
             ]
         }
     });
@@ -203,7 +164,6 @@ module.exports = function (grunt) {
         }
 
         grunt.task.run([
-            'clean:server',
             'concurrent:server',
             'autoprefixer',
             'configureProxies',
@@ -211,4 +171,11 @@ module.exports = function (grunt) {
             'watch'
         ]);
     });
+
+    grunt.registerTask('build', [
+        'jshint',
+        'compass:dist',
+        'autoprefixer',
+        'cssmin'
+    ]);
 };

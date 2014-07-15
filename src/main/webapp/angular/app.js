@@ -2,7 +2,7 @@
 
 /* App Module */
 
-angular.module('jiraKanbanCards', ['ngResource', 'ngRoute', 'ngCookies', 'base64']);
+var jiraKanbanCards = angular.module('jiraKanbanCards', ['ngResource', 'ngRoute', 'ngCookies', 'base64']);
 
 jiraKanbanCards.constant('cons', {
     POST: 'POST',
